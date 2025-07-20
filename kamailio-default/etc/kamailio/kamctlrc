@@ -50,7 +50,7 @@ DBROOTUSER="root"
 ## password for database super user
 ## - important: this is insecure, targeting the use only for automatic testing
 ## - known to work for: mysql
-DBROOTPW="rw_password"
+DBROOTPW="kamailio2025"
 
 ## option to ask confirmation for all database creation steps
 # DBINITASK=yes

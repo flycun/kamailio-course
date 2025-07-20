@@ -136,9 +136,9 @@ services:
     container_name: db01
     environment:
       MYSQL_DATABASE: 'kamailio'
-      MYSQL_USER: 'user'
-      MYSQL_PASSWORD: 'ro_password'
-      MYSQL_ROOT_PASSWORD: 'rw_password'
+      MYSQL_USER: 'kamailio'
+      MYSQL_PASSWORD: 'kamailioro'
+      MYSQL_ROOT_PASSWORD: 'kamailio2025'
     ports:
       - '3306:3306'
     expose:
