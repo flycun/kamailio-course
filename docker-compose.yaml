@@ -1,5 +1,4 @@
 ---
-version: "3.9"
 services:
 
   sngrep:
@@ -15,7 +14,7 @@ services:
       - NET_ADMIN
 
   kamailio-edge:
-    image: kamailio/kamailio-ci:5.5.2-alpine
+    image: kamailio/kamailio-ci:5.4-alpine.debug
     container_name: kamailio-edge
     ports:
       - "5090:5060"
@@ -49,7 +48,7 @@ services:
   rtpengine-edge:
     build:
       context: ./rtpengine-edge/docker
-      dockerfile: Dockerfile-rtpe
+      dockerfile: Dockerfile
     container_name: rtpengine-edge
     ports:
       - "23000-23100:23000-23100"

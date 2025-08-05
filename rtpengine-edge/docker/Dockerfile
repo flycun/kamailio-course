@@ -1,6 +1,13 @@
-FROM debian:bullseye-slim@sha256:b771c35d1e6ecf2556718ad3c0f481b4a04c1fbc133c609643acc9dd6743ead2
+FROM debian:trixie-20230725
+# 清理可能存在的其他源
+# ===== 第一步：删除 Debian 默认的 .sources 配置（关键！）=====
+RUN rm -f /etc/apt/sources.list.d/debian.sources || true
 
+# ===== 第二步：清空其他可能的 .list 文件 =====
+RUN rm -f /etc/apt/sources.list.d/*.list || true
 COPY sources.list.163.bullseye /etc/apt/sources.list
+
+
 RUN apt-get update \
   && apt-get -y --quiet --force-yes upgrade curl iproute2 \
   && apt-get install -y --no-install-recommends ca-certificates gcc g++ make build-essential git libxtables-dev libavfilter-dev \

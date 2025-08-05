@@ -1,8 +1,11 @@
-deb http://mirrors.163.com/debian/ bullseye main non-free contrib
-deb http://mirrors.163.com/debian/ bullseye-updates main non-free contrib
-deb http://mirrors.163.com/debian/ bullseye-backports main non-free contrib
-deb-src http://mirrors.163.com/debian/ bullseye main non-free contrib
-deb-src http://mirrors.163.com/debian/ bullseye-updates main non-free contrib
-deb-src http://mirrors.163.com/debian/ bullseye-backports main non-free contrib
-#deb http://mirrors.163.com/debian-security/ bullseye/updates main non-free contrib
-#deb-src http://mirrors.163.com/debian-security/ bullseye/updates main non-free contrib
+# Debian trixie (13) 主源
+deb http://mirrors.aliyun.com/debian/ trixie main contrib non-free non-free-firmware
+deb-src http://mirrors.aliyun.com/debian/ trixie main contrib non-free non-free-firmware
+
+# Debian trixie 安全更新
+deb http://mirrors.aliyun.com/debian-security/ trixie-security main contrib non-free non-free-firmware
+deb-src http://mirrors.aliyun.com/debian-security/ trixie-security main contrib non-free non-free-firmware
+
+# Debian trixie 更新源
+deb http://mirrors.aliyun.com/debian/ trixie-updates main contrib non-free non-free-firmware
+deb-src http://mirrors.aliyun.com/debian/ trixie-updates main contrib non-free non-free-firmware 
