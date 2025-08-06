@@ -2,7 +2,9 @@
 services:
 
   sngrep:
-    image: crpi-36qq8mv72daqudw8.cn-guangzhou.personal.cr.aliyuncs.com/flycun/sngrep
+    build:
+      context: ./sngrep
+      dockerfile: Dockerfile
     container_name: sngrep
     privileged: true  
     network_mode: host 
@@ -12,7 +14,7 @@ services:
       - NET_ADMIN
 
   kamailio-edge:
-    image: crpi-36qq8mv72daqudw8.cn-guangzhou.personal.cr.aliyuncs.com/flycun/kamailio-ci:5.4-alpine.debug
+    image: kamailio/kamailio-ci:5.4-alpine.debug
     container_name: kamailio-edge
     ports:
       - "5090:5060"
@@ -44,7 +46,9 @@ services:
         ipv4_address: 172.16.254.2
 
   rtpengine-edge:
-    image: crpi-36qq8mv72daqudw8.cn-guangzhou.personal.cr.aliyuncs.com/flycun/rtpengine:edge
+    build:
+      context: ./rtpengine-edge/docker
+      dockerfile: Dockerfile
     container_name: rtpengine-edge
     ports:
       - "23000-23100:23000-23100"
@@ -64,7 +68,7 @@ services:
     volumes:
       - ./b2bua/b2bua_internal_01/:/config
     command: pjsua --config-file=/config/pjsua.cfg
-    image: crpi-36qq8mv72daqudw8.cn-guangzhou.personal.cr.aliyuncs.com/flycun/pjsua:latest
+    image: andrius/pjsua:latest
     ports:
       - "5091:5060"
     networks:
@@ -78,7 +82,7 @@ services:
     tty: true
     container_name: b2bua_internal_02 
     stdin_open: true
-    image: crpi-36qq8mv72daqudw8.cn-guangzhou.personal.cr.aliyuncs.com/flycun/pjsua:latest
+    image: andrius/pjsua:latest
     command: pjsua --null-audio --no-tcp --auto-answer=200 --outbound sip:172.16.254.2;lr
     ports:
       - "5092:5060"
@@ -95,7 +99,7 @@ services:
     stdin_open: true
     volumes:
       - ./b2bua/b2bua_external_01/:/config
-    image: crpi-36qq8mv72daqudw8.cn-guangzhou.personal.cr.aliyuncs.com/flycun/pjsua:latest
+    image: andrius/pjsua:latest
     command: pjsua --config-file=/config/pjsua.cfg
     #command: "tail -f /dev/null"
     ports:
@@ -113,7 +117,7 @@ services:
     stdin_open: true
     volumes:
       - ./b2bua/b2bua_external_02/:/config
-    image: crpi-36qq8mv72daqudw8.cn-guangzhou.personal.cr.aliyuncs.com/flycun/pjsua:latest
+    image: andrius/pjsua:latest
     command: pjsua --config-file=/config/pjsua.cfg
     #command: "tail -f /dev/null"
     ports:
@@ -126,7 +130,7 @@ services:
         condition: service_started
 
   db:
-    image: crpi-36qq8mv72daqudw8.cn-guangzhou.personal.cr.aliyuncs.com/flycun/mysql:5.7
+    image: mysql:5.7
     restart: always
     container_name: db01
     environment:
@@ -145,7 +149,7 @@ services:
         ipv4_address: 172.16.254.10
 
   bind:
-    image: crpi-36qq8mv72daqudw8.cn-guangzhou.personal.cr.aliyuncs.com/flycun/bind9:9.20
+    image: internetsystemsconsortium/bind9:9.20
     container_name: bind
     ports:
       - "531:53/udp"
@@ -161,7 +165,9 @@ services:
 
   api:
     container_name: api
-    image: crpi-36qq8mv72daqudw8.cn-guangzhou.personal.cr.aliyuncs.com/flycun/kamailio-course-api
+    build:
+      context: ./api/
+      dockerfile: docker/Dockerfile
     environment:
       - FLASK_RUN_HOST=0.0.0.0
       - FLASK_RUN_PORT=5000
