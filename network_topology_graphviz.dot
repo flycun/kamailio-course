@@ -1,0 +1,64 @@
+digraph NetworkTopology {
+    rankdir=TB;
+    nodesep=0.5;
+    ranksep=1.0;
+    fontname="Arial";
+    fontsize=10;
+    
+    subgraph cluster_external {
+        label="External Network (192.168.254.0/24)";
+        color=blue;
+        style=filled;
+        fillcolor="#E6F3FF";
+        fontname="Arial Bold";
+        fontsize=12;
+        
+        b2bua_ext1 [label="b2bua_external_01\n192.168.254.100\nSIP Endpoint", shape=box, style=filled, fillcolor=white];
+        b2bua_ext2 [label="b2bua_external_02\n192.168.254.101\nSIP Endpoint", shape=box, style=filled, fillcolor=white];
+    }
+    
+    subgraph cluster_internal {
+        label="Internal Network (172.16.254.0/24)";
+        color=green;
+        style=filled;
+        fillcolor="#E6FFE6";
+        fontname="Arial Bold";
+        fontsize=12;
+        
+        b2bua_int1 [label="b2bua_internal_01\n172.16.254.100\nSIP Endpoint", shape=box, style=filled, fillcolor=white];
+        b2bua_int2 [label="b2bua_internal_02\n172.16.254.101\nAuto Answer", shape=box, style=filled, fillcolor=white];
+        db [label="db\n172.16.254.10\nMySQL Database", shape=box, style=filled, fillcolor=lightgray];
+        bind [label="bind\n172.16.254.20\nDNS/ENUM Server", shape=box, style=filled, fillcolor=lightgray];
+        api [label="api\n172.16.254.30\nREST API Service", shape=box, style=filled, fillcolor=lightgray];
+        sngrep [label="sngrep\nHost Network\nSIP Traffic Analyzer", shape=box, style=filled, fillcolor=lightcyan];
+    }
+    
+    // Combined kamailio-edge node (spanning both networks)
+    kamailio_edge [label="kamailio-edge\n192.168.254.2 / 172.16.254.2\nSIP Proxy", shape=box, style=filled, fillcolor=lightblue];
+    
+    // Combined rtpengine-edge node (spanning both networks)
+    rtpengine_edge [label="rtpengine-edge\n192.168.254.3 / 172.16.254.3\nMedia Engine", shape=box, style=filled, fillcolor=lightyellow];
+    
+    // External network connections
+    b2bua_ext1 -> kamailio_edge [color=blue];
+    b2bua_ext2 -> kamailio_edge [color=blue];
+    kamailio_edge -> rtpengine_edge [color=blue];
+    
+    // Internal network connections
+    b2bua_int1 -> kamailio_edge [color=green];
+    b2bua_int2 -> kamailio_edge [color=green];
+    kamailio_edge -> rtpengine_edge [color=green];
+    rtpengine_edge -> db [color=green];
+    kamailio_edge -> db [color=green];
+    kamailio_edge -> bind [color=green];
+    kamailio_edge -> api [color=green];
+    db -> bind [color=gray];
+    db -> api [color=gray];
+    
+    // Monitoring connections
+    kamailio_edge -> sngrep [style=dashed, color=purple];
+    rtpengine_edge -> sngrep [style=dashed, color=purple];
+    db -> sngrep [style=dashed, color=purple];
+    bind -> sngrep [style=dashed, color=purple];
+    api -> sngrep [style=dashed, color=purple];
+}
