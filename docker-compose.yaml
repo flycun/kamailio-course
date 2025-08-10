@@ -104,7 +104,7 @@ services:
       - "5093:5060"
     networks:
       external:
-        ipv4_address: 192.168.254.100
+        ipv4_address: 192.168.254.101
     depends_on:
       kamailio-edge:
         condition: service_started
@@ -122,7 +122,7 @@ services:
       - "5094:5060"
     networks:
       external:
-        ipv4_address: 192.168.254.101
+        ipv4_address: 192.168.254.102
     depends_on:
       kamailio-edge:
         condition: service_started

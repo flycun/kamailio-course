@@ -31,13 +31,13 @@ docker exec kamailio-edge sh -c "query=\$(cat /etc/kamailio/sql/rtpengine.sql) ;
 
 # create a few registered users
 echo "*creating registered users*"
-docker exec kamailio-edge kamctl add b2bua_external@192.168.254.100 password1
-docker exec kamailio-edge kamctl add b2bua_internal_01@172.16.254.100 password1
+docker exec kamailio-edge kamctl add b2bua_external@192.168.254.101 password1
+docker exec kamailio-edge kamctl add b2bua_internal_01@172.16.254.101 password1
 
 # setup dispatcher entires
 echo "*adding dispatchers*"
-docker exec kamailio-edge sh -c "kamctl dispatcher add 1 sip:172.16.254.100:5060 0 0 '' 'internal_b2bua_01'"
-docker exec kamailio-edge sh -c "kamctl dispatcher add 1 sip:172.16.254.101:5060 0 0 '' 'internal_b2bua_02'"
+docker exec kamailio-edge sh -c "kamctl dispatcher add 1 sip:172.16.254.101:5060 0 0 '' 'internal_b2bua_01'"
+docker exec kamailio-edge sh -c "kamctl dispatcher add 1 sip:172.16.254.102:5060 0 0 '' 'internal_b2bua_02'"
 
 
 # Move the proper file back to kamailio.cfg
