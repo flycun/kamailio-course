@@ -69,7 +69,7 @@ services:
       - "5091:5060"
     networks:
       internal:
-        ipv4_address: 172.16.254.100
+        ipv4_address: 172.16.254.101
     depends_on:
       kamailio-edge:
         condition: service_started
@@ -78,13 +78,15 @@ services:
     tty: true
     container_name: b2bua_internal_02 
     stdin_open: true
+    volumes:
+      - ./b2bua/b2bua_internal_02/:/config
+    command: pjsua --config-file=/config/pjsua.cfg
     image: crpi-36qq8mv72daqudw8.cn-guangzhou.personal.cr.aliyuncs.com/flycun/pjsua:latest
-    command: pjsua --null-audio --no-tcp --auto-answer=200 --outbound sip:172.16.254.2;lr
     ports:
       - "5092:5060"
     networks:
       internal:
-        ipv4_address: 172.16.254.101
+        ipv4_address: 172.16.254.102
     depends_on:
       kamailio-edge:
         condition: service_started
