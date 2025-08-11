@@ -34,6 +34,10 @@ The network is separated into internal (172.16.254.0/24) and external (192.168.2
 ```bash
 chmod +x initial_setup.sh
 ./initial_setup.sh
+
+# 创建预定义网络
+chmod +x create_networks.sh
+./create_networks.sh
 ```
 
 ### Starting/Stopping Services

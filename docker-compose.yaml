@@ -15,7 +15,8 @@ services:
     image: crpi-36qq8mv72daqudw8.cn-guangzhou.personal.cr.aliyuncs.com/flycun/kamailio-ci:5.4-alpine.debug
     container_name: kamailio-edge
     ports:
-      - "5090:5060"
+      - "5087:5060"
+      - "5099:5061"
     volumes:
       - ./kamailio-default/etc/kamailio/:/etc/kamailio
       - ./kamailio-default/etc/resolv.conf:/etc/resolv.conf
@@ -38,9 +39,9 @@ services:
     dns:
       - 172.16.254.20
     networks:
-      external:
+      kamailio-external:
         ipv4_address: 192.168.254.2
-      internal:
+      kamailio-internal:
         ipv4_address: 172.16.254.2
 
   rtpengine-edge:
@@ -51,9 +52,9 @@ services:
     volumes:
       - ./rtpengine-edge/config:/etc/rtpengine
     networks:
-      external:
+      kamailio-external:
         ipv4_address: 192.168.254.3
-      internal:
+      kamailio-internal:
         ipv4_address: 172.16.254.3
 
 
@@ -68,7 +69,7 @@ services:
     ports:
       - "5091:5060"
     networks:
-      internal:
+      kamailio-internal:
         ipv4_address: 172.16.254.101
     depends_on:
       kamailio-edge:
@@ -85,7 +86,7 @@ services:
     ports:
       - "5092:5060"
     networks:
-      internal:
+      kamailio-internal:
         ipv4_address: 172.16.254.102
     depends_on:
       kamailio-edge:
@@ -103,7 +104,7 @@ services:
     ports:
       - "5093:5060"
     networks:
-      external:
+      kamailio-external:
         ipv4_address: 192.168.254.101
     depends_on:
       kamailio-edge:
@@ -121,7 +122,7 @@ services:
     ports:
       - "5094:5060"
     networks:
-      external:
+      kamailio-external:
         ipv4_address: 192.168.254.102
     depends_on:
       kamailio-edge:
@@ -143,7 +144,7 @@ services:
     volumes:
       - ./db:/var/lib/mysql
     networks:
-      internal:
+      kamailio-internal:
         ipv4_address: 172.16.254.10
 
   bind:
@@ -158,7 +159,7 @@ services:
       - ./bind/db.e164.arpa:/etc/bind/db.e164.arpa
     restart: always
     networks:
-      internal:
+      kamailio-internal:
         ipv4_address: 172.16.254.20
 
   api:
@@ -172,19 +173,11 @@ services:
     volumes:
       - ./api/app:/app
     networks:
-      internal:
+      kamailio-internal:
         ipv4_address: 172.16.254.30
 
 networks:
-    external:
-        # use the bridge driver, but enable IPv6
-        ipam:
-            config:
-                - subnet: 192.168.254.0/24
-                  gateway: 192.168.254.1
-    internal:
-        # use a custom driver, with no options
-        ipam:
-            config:
-                - subnet: 172.16.254.0/24
-                  gateway: 172.16.254.1
+  kamailio-external:
+    external: true
+  kamailio-internal:
+    external: true
