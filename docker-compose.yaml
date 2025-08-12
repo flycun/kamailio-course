@@ -15,8 +15,8 @@ services:
     image: crpi-36qq8mv72daqudw8.cn-guangzhou.personal.cr.aliyuncs.com/flycun/kamailio-ci:5.4-alpine.debug
     container_name: kamailio-edge
     ports:
-      - "5087:5060"
-      - "5099:5061"
+      - "5087:5060/udp"
+      - "5099:5061/udp"
     volumes:
       - ./kamailio-default/etc/kamailio/:/etc/kamailio
       - ./kamailio-default/etc/resolv.conf:/etc/resolv.conf

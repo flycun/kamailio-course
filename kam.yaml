@@ -1,0 +1,101 @@
+---
+services:
+
+  kamailio-edge:
+    image: crpi-36qq8mv72daqudw8.cn-guangzhou.personal.cr.aliyuncs.com/flycun/kamailio-ci:5.4-alpine.debug
+    container_name: kamailio-edge
+    stdin_open: true
+    tty: true
+    # command: ["/bin/sh"]
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+    entrypoint:
+      - /bin/sh
+      # - /start-kam.sh
+    ports:
+      - "5062:5060/udp"
+      - "5061:5061/udp"
+    volumes:
+      - ./kamailio-default/etc/kamailio/:/etc/kamailio
+      - ./kamailio-default/etc/resolv.conf:/etc/resolv.conf
+      - ./start-kam.sh:/start-kam.sh
+    environment:
+      - KAM_SHM_MEM_SIZE=256
+      - COREIP=172.16.254.2
+      - CORESUBNET=172.16.254.1/24
+      - TLSPORT=5061
+      - UDPPORT=5060
+      - PUBLICIP=192.168.254.2
+      - DBUSERNAME=kamailio
+      - DBPASSWORD=kamailiorw
+      - DBHOST=172.16.254.10
+      - DBNAME=kamailio
+    depends_on:
+      rtpengine-edge:
+        condition: service_started
+      db:
+        condition: service_started
+    dns:
+      - 172.16.254.20
+    networks:
+      kamailio-external:
+        ipv4_address: 192.168.254.2
+      kamailio-internal:
+        ipv4_address: 172.16.254.2
+
+  rtpengine-edge:
+    image: crpi-36qq8mv72daqudw8.cn-guangzhou.personal.cr.aliyuncs.com/flycun/rtpengine:edge
+    container_name: rtpengine-edge
+    ports:
+      - "23000-23100:23000-23100"
+    volumes:
+      - ./rtpengine-edge/config:/etc/rtpengine
+    networks:
+      kamailio-external:
+        ipv4_address: 192.168.254.3
+      kamailio-internal:
+        ipv4_address: 172.16.254.3
+
+  db:
+    image: crpi-36qq8mv72daqudw8.cn-guangzhou.personal.cr.aliyuncs.com/flycun/mysql:5.7
+    restart: always
+    container_name: db01
+    environment:
+      MYSQL_DATABASE: 'kamailio'
+      MYSQL_USER: 'kamailio'
+      MYSQL_PASSWORD: 'kamailioro'
+      MYSQL_ROOT_PASSWORD: 'kamailio2025'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - ./db:/var/lib/mysql
+    networks:
+      kamailio-internal:
+        ipv4_address: 172.16.254.10
+
+  bind:
+    image: crpi-36qq8mv72daqudw8.cn-guangzhou.personal.cr.aliyuncs.com/flycun/bind9:9.20
+    container_name: bind
+    ports:
+      - "531:53/udp"
+      - "531:53/tcp"
+    volumes:
+      - ./bind/named.conf:/etc/bind/named.conf
+      - ./bind/named.conf.local:/etc/bind/named.conf.local
+      - ./bind/db.e164.arpa:/etc/bind/db.e164.arpa
+    restart: always
+    networks:
+      kamailio-internal:
+        ipv4_address: 172.16.254.20
+
+
+
+networks:
+  kamailio-external:
+    external: true
+  kamailio-internal:
+    external: true
